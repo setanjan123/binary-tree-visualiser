@@ -12,12 +12,18 @@ const buildTreeObject = (node, i,length,arr) => {
     if (i < length) {
         node = new Node(arr[i]);
         let left = buildTreeObject(node.left, 2 * i + 1,length,arr);
-        let right = buildTreeObject(node.right, 2 * i + 2,length,arr);
-        if(left) node.children[0] = left;
-        if(right) node.children[1] = right;
-        if(node.children.length>0) {
-            if(!node.children[0]) node.children[0] = new Node('null');
-            else if(!node.children[1]) node.children[1] = new Node('null');
+        let right = buildTreeObject(node.right, 2 * i + 2,length,arr);    
+        if(left && right && left.name!=='null' && right.name!=='null') {
+            node.children.push(left);
+            node.children.push(right);
+        }
+        else if(left && left.name!=='null') {
+            node.children.push(left);
+            node.children.push(new Node('null'));
+        }
+        else if(right && right.name!=='null') {
+            node.children.push(new Node('null'));
+            node.children.push(right);
         }
     }
     return node;
@@ -51,7 +57,7 @@ const drawTree = ()=> {
     const nodes = root.descendants();
     const links = root.links();
 
-    const link = svg.selectAll(".link")
+    svg.selectAll(".link")
     .data(links)
     .enter()
     .append("path")
